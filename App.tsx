@@ -9,6 +9,7 @@ import { User } from './src/Domain/entities/User';
 import { UserProvider } from './src/Presentation/context/UserContext';
 import { MapScreen } from './src/Presentation/views/mapScreen/Map';
 import { DriversListScreen } from './src/Presentation/views/listDriver/ListDriverScreen';
+import TripDetailScreen from './src/Presentation/views/tripDetailScreen/TripDetailScreen';
 
 
 export type RootStackParamList = {
@@ -17,8 +18,9 @@ export type RootStackParamList = {
   UserTabsNavigator: undefined,
   UserAddressListScreen: undefined,
   ProfileUpdateScreen: { user: User },
-  MapScreen: {user:User},
-  DriversListScreen : undefined
+  MapScreen: { user: User },
+  DriversListScreen: undefined
+  TripDetailScreen: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -63,7 +65,7 @@ const App = () => {
               title: 'Punto de referencia'
             }}
           />
-          
+
           <Stack.Screen
             name='DriversListScreen'
             component={DriversListScreen}
@@ -72,7 +74,16 @@ const App = () => {
               title: 'Punto de referencia'
             }}
           />
-          
+
+          <Stack.Screen
+            name='TripDetailScreen'
+            component={TripDetailScreen}
+            options={{
+              headerShown: true,
+              title: 'Punto de referencia'
+            }}
+          />
+
 
         </Stack.Navigator>
       </UserState>

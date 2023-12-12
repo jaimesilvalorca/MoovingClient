@@ -4,7 +4,7 @@ import { Card, ListItem, Avatar } from 'react-native-elements';
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
 
-export const DriversListScreen = () => {
+export const DriversListScreen = ({ navigation }) => {
   const [drivers, setDrivers] = useState([]);
   const [selectedDriverEmail, setSelectedDriverEmail] = useState(null);
   const { user } = useContext(UserContext);
@@ -35,13 +35,16 @@ export const DriversListScreen = () => {
           {
             userEmail: userEmail,
             driverEmail: selectedDriverEmail,
-            estado:'enviado'
+            estado: 'enviado',
           }
+          
         );
+        console.log(response.data.data)
 
         if (response.status === 200) {
           console.log('PUT exitoso en el backend');
-          // Realiza cualquier otra acción necesaria después del PUT
+
+          navigation.navigate('TripDetailScreen', { tripId: response.data.data._id });
         } else {
           console.error('Error en el PUT en el backend:', response.data);
         }
@@ -81,7 +84,7 @@ export const DriversListScreen = () => {
       {selectedDriverEmail && (
         <TouchableOpacity onPress={handlePutRequest}>
           <View style={{ backgroundColor: 'blue', padding: 10, margin: 10 }}>
-            <Text style={{ color: 'white', textAlign: 'center' }}>Realizar PUT con conductor seleccionado</Text>
+            <Text style={{ color: 'white', textAlign: 'center' }}>Seleccionar Moover</Text>
           </View>
         </TouchableOpacity>
       )}
