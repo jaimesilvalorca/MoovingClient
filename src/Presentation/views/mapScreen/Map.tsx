@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -7,6 +7,8 @@ import * as Location from 'expo-location';
 import { GOOGLE_MAPS_KEY } from '@env';
 import axios from 'axios';
 import { UserContext } from '../../context/UserContext';
+import { useNavigation } from '@react-navigation/native';
+import { RoundedButton } from '../../components/RoundedButton';
 
 export const MapScreen = () => {
   const [origin, setOrigin] = useState(null);
@@ -14,10 +16,9 @@ export const MapScreen = () => {
   const [distance, setDistance] = useState(null);
   const [originDescription, setOriginDescription] = useState('Origen');
   const mapRef = useRef(null);
-  const {user} = useContext(UserContext)
-
-  // Simula la información de sesión del usuario
-  const userEmail = user.email; // Reemplaza con la lógica real para obtener el correo del usuario
+  const { user } = useContext(UserContext);
+  const userEmail = user.email;
+  const navigation = useNavigation();
 
   const handleSelectOrigin = async (data, details = null) => {
     if (data.description === 'Mi ubicación') {
@@ -101,8 +102,8 @@ export const MapScreen = () => {
           destinationLatitude: destination.latitude,
           destinationLongitude: destination.longitude,
           distance: distance,
-          amount: 3000 * distance,
-          estado:'solicitado' // Ajusta según tus necesidades
+          amount: distance && (distance * 3000).toFixed(2),
+          estado: 'solicitado',
         };
 
         const response = await axios.post(
@@ -112,6 +113,7 @@ export const MapScreen = () => {
 
         if (response.status === 200) {
           console.log('Viaje guardado con éxito en el backend');
+          navigation.navigate('DriversListScreen');
         } else {
           console.error('Error al guardar el viaje en el backend:', response.data);
         }
@@ -127,8 +129,8 @@ export const MapScreen = () => {
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: -33.4489, 
-          longitude: -70.6693, 
+          latitude: -33.4489,
+          longitude: -70.6693,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -201,13 +203,13 @@ export const MapScreen = () => {
       {distance && (
         <View style={styles.distanceContainer}>
           <Text style={styles.distanceText}>Distancia: {distance} km</Text>
-          <Text style={styles.distanceText}>Tarifa:$ {distance*3000}</Text>
+          <Text style={styles.distanceText}>Tarifa: $ {distance && (distance * 3000).toFixed(2)}</Text>
         </View>
       )}
 
-      <TouchableOpacity onPress={saveTripToBackend} style={styles.saveTripButton}>
-        <Text style={styles.saveTripButtonText}>Guardar Viaje</Text>
-      </TouchableOpacity>
+      <View style={styles.saveTripButtonContainer}>
+        <RoundedButton text="Solicitar Viaje" onPress={saveTripToBackend} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
   },
   distanceContainer: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 70,
     left: 16,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     padding: 8,
@@ -248,16 +250,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  saveTripButton: {
+  saveTripButtonContainer: {
     position: 'absolute',
+    width: '60%',
     bottom: 16,
-    right: 16,
-    backgroundColor: '#27ae60',
-    padding: 10,
-    borderRadius: 5,
-  },
-  saveTripButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    alignSelf: 'center',
   },
 });
