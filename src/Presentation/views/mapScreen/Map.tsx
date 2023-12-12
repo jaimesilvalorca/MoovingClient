@@ -203,7 +203,8 @@ export const MapScreen = () => {
       {distance && (
         <View style={styles.distanceContainer}>
           <Text style={styles.distanceText}>Distancia: {distance} km</Text>
-          <Text style={styles.distanceText}>Tarifa: $ {distance && (distance * 3000).toFixed(2)}</Text>
+          <Text style={styles.distanceText}>Tarifa: $ {distance && (distance * 3000).toFixed(0)}</Text>
+          <Text style={styles.distanceText}>30% de adelanto: ${(distance && ((distance *3000))*0.30).toFixed(0)}</Text>
         </View>
       )}
 
