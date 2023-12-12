@@ -22,7 +22,7 @@ export const DriversListScreen = () => {
 
   return (
     <View>
-      <Text>Listado de Conductores Disponibles:</Text>
+      <Text style={{textAlign:'center',fontSize:30}}>Listado de Conductores Disponibles:</Text>
       <FlatList
         data={drivers}
         keyExtractor={(item) => (item && item.id ? item.id.toString() : Math.random().toString())}
