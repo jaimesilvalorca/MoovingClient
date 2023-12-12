@@ -94,7 +94,7 @@ export const MapScreen = () => {
     try {
       if (origin && destination && distance) {
         const tripData = {
-          email: userEmail,
+          userEmail: userEmail,
           origin: originDescription,
           destination: destination.description,
           originLatitude: origin.latitude,
